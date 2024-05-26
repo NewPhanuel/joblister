@@ -49,3 +49,30 @@ function loadPartial(string ...$partials): void
         }
     }
 }
+
+/**
+ * Prints out formatted values of any variable
+ *
+ * @param mixed $object
+ * @return void
+ */
+function inspect(mixed $object): void
+{
+    echo '<pre>';
+    print_r($object);
+    echo '</pre><br />';
+}
+
+/**
+ * Prints out formatted values of any variable and kills the script
+ *
+ * @param mixed $object
+ * @return void
+ */
+function inspectAndDie(mixed $object): void
+{
+    echo '<pre>';
+    print_r($object);
+    echo '</pre>';
+    die();
+}
