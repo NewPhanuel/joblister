@@ -1,9 +1,13 @@
 <!-- Nav -->
 <header class="bg-blue-900 text-white p-4">
     <div class="container mx-auto flex justify-between items-center">
-        <h1 class="text-3xl font-semibold">
-            <a href="/">Joblister</a>
-        </h1>
+        <div style="display:flex; align-items: center">
+            <img src="/images/joblister.png"
+                style="margin-right: .4rem; width: 2rem; height: 2rem; display:inline-block; vertical-align:middle">
+            <h1 class="text-3xl font-semibold">
+                <a href="/">Joblister</a>
+            </h1>
+        </div>
         <nav class="space-x-4">
             <a href="login.html" class="text-white hover:underline">Login</a>
             <a href="register.html" class="text-white hover:underline">Register</a>

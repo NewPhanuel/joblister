@@ -7,4 +7,6 @@ $sql = "SELECT * FROM listings LIMIT 6";
 
 $listings = $db->query($sql)->fetchAll();
 
-loadView('home');
+loadView('home', [
+    'listings' => $listings,
+]);

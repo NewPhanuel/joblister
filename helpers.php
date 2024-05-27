@@ -13,21 +13,21 @@ function basePath(string $path): string
 }
 
 /**
- * Load a view
+ * Loads a view and passes data into it
  *
- * @param string ...$name
+ * @param string $name
+ * @param array $data
  * @return void
  */
-function loadView(string ...$names): void
+function loadView(string $name, array $data = []): void
 {
-    foreach ($names as $name) {
-        $viewPath = basePath("views/{$name}.view.php");
+    $viewPath = basePath("views/{$name}.view.php");
 
-        if (file_exists($viewPath)) {
-            require $viewPath;
-        } else {
-            echo "View {$name} not found!";
-        }
+    if (file_exists($viewPath)) {
+        extract($data);
+        require $viewPath;
+    } else {
+        echo "View {$name} not found!";
     }
 }
 
@@ -75,4 +75,15 @@ function inspectAndDie(mixed $object): void
     print_r($object);
     echo '</pre>';
     die();
+}
+
+/**
+ * Formats the Salary value from the database
+ *
+ * @param string $salary
+ * @return string
+ */
+function formatSalary(string $salary): string
+{
+    return '$' . number_format(floatval($salary));
 }

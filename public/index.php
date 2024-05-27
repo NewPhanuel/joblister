@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 require '../helpers.php';
 require basePath('Router.php');
 require basePath('Database.php');
