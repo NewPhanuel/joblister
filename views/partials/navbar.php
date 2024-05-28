@@ -2,8 +2,9 @@
 <header class="bg-blue-900 text-white p-4">
     <div class="container mx-auto flex justify-between items-center">
         <div style="display:flex; align-items: center">
-            <img src="/images/joblister.png"
-                style="margin-right: .4rem; width: 2rem; height: 2rem; display:inline-block; vertical-align:middle">
+            <a href="/"><img src="/images/joblister.png"
+                    style="margin-right: .4rem; width: 2rem; height: 2rem; display:inline-block; vertical-align:middle">
+            </a>
             <h1 class="text-3xl font-semibold">
                 <a href="/">Joblister</a>
             </h1>
