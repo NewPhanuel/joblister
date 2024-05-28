@@ -1,0 +1,16 @@
+{
+    "name": "devphanuel/joblister",
+    "description": "A Job listing Application",
+    "authors": [
+        {
+            "name": "Dev Phanuel",
+            "email": "omamowhop@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Framework\\": "Framework/",
+            "App\\": "App/"
+        }
+    }
+}
