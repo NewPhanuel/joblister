@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Framework;
 
+use App\Controllers\ErrorController;
+
 class Router
 {
     protected array $routes = [];
@@ -13,15 +15,17 @@ class Router
      *
      * @param string $method
      * @param string $uri
-     * @param string $controller
+     * @param string $action
      * @return void
      */
-    public function registerRoute(string $method, string $uri, string $controller): void
+    public function registerRoute(string $method, string $uri, string $action): void
     {
+        list($controller, $controllerMethod) = explode('@', $action);
         $this->routes[] = [
             "method" => $method,
             "uri" => $uri,
             "controller" => $controller,
+            "controllerMethod" => $controllerMethod,
         ];
     }
 
@@ -29,61 +33,48 @@ class Router
      * Adds a GET route
      *
      * @param string $uri
-     * @param string $controller
+     * @param string $action
      * @return void
      */
-    public function get(string $uri, string $controller): void
+    public function get(string $uri, string $action): void
     {
-        $this->registerRoute("GET", $uri, $controller);
+        $this->registerRoute("GET", $uri, $action);
     }
 
     /**
      * Adds a POST route
      *
      * @param string $uri
-     * @param string $controller
+     * @param string $action
      * @return void
      */
-    public function post(string $uri, string $controller): void
+    public function post(string $uri, string $action): void
     {
-        $this->registerRoute("POST", $uri, $controller);
+        $this->registerRoute("POST", $uri, $action);
     }
 
     /**
      * Adds a PUT route
      *
      * @param string $uri
-     * @param string $controller
+     * @param string $action
      * @return void
      */
-    public function put(string $uri, string $controller): void
+    public function put(string $uri, string $action): void
     {
-        $this->registerRoute("PUT", $uri, $controller);
+        $this->registerRoute("PUT", $uri, $action);
     }
 
     /**
      * Adds a DELETE route
      *
      * @param string $uri
-     * @param string $controller
+     * @param string $action
      * @return void
      */
-    public function delete(string $uri, string $controller): void
+    public function delete(string $uri, string $action): void
     {
-        $this->registerRoute("DELETE", $uri, $controller);
-    }
-
-    /**
-     * Loads 
-     *
-     * @param integer $httpResCode
-     * @return void
-     */
-    public function error(int $httpResCode = 404): void
-    {
-        http_response_code($httpResCode);
-        loadView('error/' . $httpResCode);
-        exit;
+        $this->registerRoute("DELETE", $uri, $action);
     }
 
     /**
@@ -97,11 +88,16 @@ class Router
     {
         foreach ($this->routes as $route) {
             if ($route["uri"] === $uri && $route["method"] === $method) {
-                require basePath('App/' . $route['controller']);
+                $controller = 'App\\Controllers\\' . $route['controller'];
+                $controllerMethod = $route['controllerMethod'];
+
+                // Instantiate and call the method
+                $controllerInstance = new $controller();
+                $controllerInstance->$controllerMethod();
                 return;
             }
         }
 
-        $this->error();
+        ErrorController::notFound();
     }
 }

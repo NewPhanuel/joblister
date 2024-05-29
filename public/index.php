@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
-use Framework\Router;
 
 require __DIR__ . "/../vendor/autoload.php";
 require '../helpers.php';
 
+use Framework\Router;
 
 // Instantiatig the router
 $router = new Router();
