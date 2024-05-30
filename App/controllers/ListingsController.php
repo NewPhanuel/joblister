@@ -54,13 +54,19 @@ class ListingsController
      * 
      * @return void
      */
-    public function show(): void
+    public function show(array $params): void
     {
-        $id = $_GET['id'];
+        $id = $params['id'];
         $sql = 'SELECT * FROM listings WHERE id = :id';
         $params = ["id" => $id];
 
         $listing = $this->db->query($sql, $params)->fetch();
+
+        // Check if listing exists 
+        if (!$listing) {
+            ErrorController::notFound("Listing not Found!");
+            return;
+        }
         loadView("/listings/show", ["listing" => $listing]);
     }
 }
