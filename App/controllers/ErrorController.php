@@ -20,6 +20,12 @@ class ErrorController
         ]);
     }
 
+    /**
+     * Loads a 403 not authorised page
+     *
+     * @param string $message
+     * @return void
+     */
     public static function unauthorised(string $message = "You are not authorised to view this resource"): void
     {
         http_response_code(403);

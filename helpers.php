@@ -72,7 +72,7 @@ function inspect(mixed $object): void
 function inspectAndDie(mixed $object): void
 {
     echo '<pre>';
-    print_r($object);
+    var_export($object);
     echo '</pre>';
     die();
 }
@@ -86,4 +86,15 @@ function inspectAndDie(mixed $object): void
 function formatSalary(string $salary): string
 {
     return '$' . number_format(floatval($salary));
+}
+
+/**
+ * Makes a script or any form if injection treated as a string
+ *
+ * @param string $dirty
+ * @return string
+ */
+function sanitize(string $dirty): string
+{
+    return filter_var(trim($dirty), FILTER_SANITIZE_SPECIAL_CHARS);
 }
