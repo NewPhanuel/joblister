@@ -69,6 +69,10 @@
                     value="<?= $listings['state'] ?? '' ?>" />
             </div>
             <div class="mb-4">
+                <input type="text" name="tags" placeholder="Tags"
+                    class="w-full px-4 py-2 border rounded focus:outline-none" value="<?= $listings['tags'] ?? '' ?>" />
+            </div>
+            <div class="mb-4">
                 <input type="text" name="phone" placeholder="Phone"
                     class="w-full px-4 py-2 border rounded focus:outline-none"
                     value="<?= $listings['phone'] ?? '' ?>" />

@@ -98,3 +98,30 @@ function sanitize(string $dirty): string
 {
     return filter_var(trim($dirty), FILTER_SANITIZE_SPECIAL_CHARS);
 }
+
+/**
+ * Redirects to a given page
+ *
+ * @param string $url
+ * @return void
+ */
+function redirect(string $url): void
+{
+    header("Location: {$url}");
+    exit;
+}
+
+/**
+ * Truncates content and adds elllipsis
+ *
+ * @param string $content
+ * @param integer $maxLength
+ * @return string
+ */
+function truncate(string $content, int $maxLength): string
+{
+    if (strlen($content) > $maxLength) {
+        $content = substr($content, 0, $maxLength - 3) . '...';
+    }
+    return $content;
+}

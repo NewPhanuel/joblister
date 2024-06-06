@@ -53,6 +53,7 @@ class ListingsController
      *
      * Basically shows a single listing
      * 
+     * @param array $params
      * @return void
      */
     public function show(array $params): void
@@ -71,14 +72,19 @@ class ListingsController
         loadView("/listings/show", ["listing" => $listing]);
     }
 
+    /**
+     * Inserts listing from the user into database
+     *
+     * @return void
+     */
     public function store(): void
     {
-        $allowedFields = ['title', 'description', 'salary', 'requirements', 'benefits', 'company', 'address', 'city', 'state', 'phone', 'email'];
+        $allowedFields = ['title', 'description', 'salary', 'tags', 'requirements', 'benefits', 'company', 'address', 'city', 'state', 'phone', 'email'];
         $newListingData = array_intersect_key($_POST, array_flip($allowedFields));
         $newListingData['user_id'] = 1;
         $newListingData = array_map('sanitize', $newListingData);
 
-        $requiredFields = ['title', 'description', 'email', 'city', 'state'];
+        $requiredFields = ['title', 'description', 'salary', 'email', 'city', 'state'];
         $errors = [];
 
         foreach ($requiredFields as $field) {
@@ -93,7 +99,53 @@ class ListingsController
                 'listings' => $newListingData,
             ]);
         } else {
-            echo 'Post Successful!';
+            // Submit data to database
+            $fields = [];
+
+            foreach ($newListingData as $field => $value) {
+                // Replace empty strings with null
+                if ($value === '') {
+                    $newListingData[$field] = null;
+                }
+                $fields[] = $field;
+                $values[] = ':' . $field;
+            }
+
+            $fields = implode(', ', $fields);
+            $values = implode(', ', $values);
+
+            // Query
+            $sql = "INSERT INTO listings ({$fields}) VALUES ({$values})";
+            $this->db->query($sql, $newListingData);
+
+            redirect('/listings');
         }
+    }
+
+    /**
+     * Deletes a listing from the database
+     *
+     * @param array $params
+     * @return void
+     */
+    public function destroy(array $params): void
+    {
+        $id = $params['id'];
+
+        $params = [
+            'id' => $id,
+        ];
+        $sql = 'SELECT * FROM listings WHERE id = :id';
+
+        $listing = $this->db->query($sql, $params)->fetch();
+
+        if (!$listing) {
+            ErrorController::notFound('Listing does not exist');
+            return;
+        }
+
+        $sql = 'DELETE FROM listings WHERE id = :id';
+        $this->db->query($sql, $params);
+        redirect('/listings');
     }
 }
