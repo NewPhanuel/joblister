@@ -66,7 +66,7 @@ class ListingsController
 
         // Check if listing exists 
         if (!$listing) {
-            ErrorController::notFound("Listing not Found!");
+            ErrorController::notFound("Listing Not Found!");
             return;
         }
         loadView("/listings/show", ["listing" => $listing]);
@@ -152,5 +152,73 @@ class ListingsController
         $_SESSION['success_message'] = 'Listing deleted successfully';
 
         redirect('/listings');
+    }
+
+    /**
+     * Loads the edit form where a post can be edited
+     *
+     * @param array $params
+     * @return void
+     */
+    public function edit(array $params): void
+    {
+        $id = $params['id'];
+        $sql = 'SELECT * FROM listings WHERE id = :id';
+        $params = ["id" => $id];
+
+        $listing = $this->db->query($sql, $params)->fetch();
+
+        if (!$listing) {
+            ErrorController::notFound('Listing Not Found!');
+            return;
+        }
+        loadView('/listings/edit', ['listing' => $listing]);
+    }
+
+    /**
+     * Updates the listing on the edit form 
+     *
+     * @param array $params
+     * @return void
+     */
+    public function update(): void
+    {
+        $allowedFields = ['id', 'title', 'description', 'salary', 'tags', 'requirements', 'benefits', 'company', 'address', 'city', 'state', 'phone', 'email'];
+        $editedListingData = array_intersect_key($_POST, array_flip($allowedFields));
+        $editedListingData = array_map('sanitize', $editedListingData);
+
+        $requiredFields = ['title', 'description', 'salary', 'email', 'city', 'state'];
+        $errors = [];
+
+        foreach ($requiredFields as $field) {
+            if (empty($editedListingData[$field]) or !Validation::string($editedListingData[$field])) {
+                $errors[$field] = ucfirst($field) . ' is required';
+            }
+        }
+
+        if (!empty($errors)) {
+            loadView('/listings/edit', [
+                'errors' => $errors,
+                'listing' => (object) $editedListingData,
+            ]);
+            exit;
+        } else {
+            $data = [];
+
+            foreach ($editedListingData as $field => $value) {
+                if ($value === '') {
+                    $editedListingData[$field] = null;
+                }
+                $data[] = "{$field} = :{$field}";
+            }
+
+            $data = implode(', ', $data);
+
+            $sql = "UPDATE listings SET {$data} WHERE id = :id";
+            $this->db->query($sql, $editedListingData);
+
+            $_SESSION['success_message'] = 'Listing Updated Successfully';
+            redirect("/listings/{$editedListingData['id']}");
+        }
     }
 }
