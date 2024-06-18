@@ -18,3 +18,8 @@ $router->delete('/listings/{id}', 'ListingsController@destroy');
 
 // Put routes
 $router->put('/listings', 'ListingsController@update');
+
+// Authentication routes
+$router->get('/auth/register', 'UserController@create');
+$router->get('/auth/login', 'UserController@login');
+$router->post('/auth/register', 'Usercontroller@store');

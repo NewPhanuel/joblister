@@ -32,7 +32,7 @@ function loadView(string $name, array $data = []): void
 }
 
 /**
- * Load a partial
+ * Loads a array of partials
  *
  * @param string ...$partials
  * @return void
@@ -47,6 +47,25 @@ function loadPartial(string ...$partials): void
         } else {
             echo "Partial {$partial} not found!";
         }
+    }
+}
+
+/**
+ * Loads a partial with data
+ *
+ * @param string $partial
+ * @param array $data
+ * @return void
+ */
+function loadPartialWithData(string $partial, array $data): void
+{
+    $partialPath = basePath("App/views/partials/{$partial}.php");
+
+    if (file_exists($partialPath)) {
+        extract($data);
+        require $partialPath;
+    } else {
+        echo "Partial {$partial} not found!";
     }
 }
 
