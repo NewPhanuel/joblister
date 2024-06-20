@@ -5,6 +5,7 @@ namespace App\Controllers;
 
 use Framework\Database;
 use Framework\Validation;
+use Framework\Session;
 
 class ListingsController
 {
@@ -33,6 +34,7 @@ class ListingsController
     {
         $sql = 'SELECT * FROM listings';
         $listings = $this->db->query($sql)->fetchAll();
+        $listings = array_reverse($listings);
         loadView('/listings/index', ['listings' => $listings]);
     }
 
@@ -81,7 +83,7 @@ class ListingsController
     {
         $allowedFields = ['title', 'description', 'salary', 'tags', 'requirements', 'benefits', 'company', 'address', 'city', 'state', 'phone', 'email'];
         $newListingData = array_intersect_key($_POST, array_flip($allowedFields));
-        $newListingData['user_id'] = 1;
+        $newListingData['user_id'] = Session::get('user')['id'];
         $newListingData = array_map('sanitize', $newListingData);
 
         $requiredFields = ['title', 'description', 'salary', 'email', 'city', 'state'];

@@ -23,3 +23,5 @@ $router->put('/listings', 'ListingsController@update');
 $router->get('/auth/register', 'UserController@create');
 $router->get('/auth/login', 'UserController@login');
 $router->post('/auth/register', 'Usercontroller@store');
+$router->post('/auth/logout', 'UserController@logout');
+$router->post('/auth/login', 'UserController@authenticate');

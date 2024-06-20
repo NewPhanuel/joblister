@@ -31,6 +31,7 @@ class HomeController
     {
         $sql = "SELECT * FROM listings LIMIT 6";
         $listings = $this->db->query($sql)->fetchAll();
+        $listings = array_reverse($listings);
         loadView('home', [
             'listings' => $listings,
         ]);

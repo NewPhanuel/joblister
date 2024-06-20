@@ -144,3 +144,9 @@ function truncate(string $content, int $maxLength): string
     }
     return $content;
 }
+
+function clearCookie(string $cookie): void
+{
+    $params = session_get_cookie_params();
+    setcookie($cookie, '', time() - 86400, $params['path'], $params['domain']);
+}

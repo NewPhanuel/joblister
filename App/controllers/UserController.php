@@ -42,6 +42,14 @@ class UserController
         loadView('users/create');
     }
 
+    /**
+     * Validates info from the register form
+     * and creates an account with it.
+     * 
+     * Then it saves some of the details to session
+     *
+     * @return void
+     */
     public function store(): void
     {
         $allowedFields = ['name', 'email', 'city', 'state', 'password', 'password_confirmation'];
@@ -55,8 +63,8 @@ class UserController
         if (!Validation::email($userData['email'])) {
             $errors['email'] = 'Please enter a valid email address';
         }
-        if (!Validation::string($userData['password'], 6, 50)) {
-            $errors['password'] = 'Password must be at least 6 characters';
+        if (!Validation::string($userData['password'], 6, 17)) {
+            $errors['password'] = 'Password must be min 6 characters and max 17 characters';
         }
         if (!Validation::match($userData['password'], $userData['password_confirmation'])) {
             $errors['password_confirmation'] = 'Passwords must match';
@@ -109,6 +117,7 @@ class UserController
 
         $userId = $this->db->conn->lastInsertId();
 
+        // Set user session
         Session::set('user', [
             'id' => $userId,
             'name' => $userData['name'],
@@ -117,7 +126,76 @@ class UserController
             'state' => $userData['state'],
         ]);
 
-        inspectAndDie(Session::get('user'));
+        redirect('/');
+    }
+
+    /**
+     * Clears the user session and the cookie
+     *
+     * @return void
+     */
+    public function logout(): void
+    {
+        Session::clearAll();
+        clearCookie('PHPSESSID');
+        redirect('/');
+    }
+
+    public function authenticate(): void
+    {
+        $email = sanitize($_POST['email']);
+        $password = sanitize($_POST['password']);
+        $errors = [];
+
+        // Validate forms
+        if (!Validation::email($email)) {
+            $errors['email'] = 'Please enter a valid email address';
+        }
+
+        if (!Validation::string($password, 6, 17)) {
+            $errors['password'] = 'Password must be min 6 characters and max 17 characters';
+        }
+
+        // Check fr errors
+        if (!empty($errors)) {
+            loadView('/users/login', [
+                'errors' => $errors,
+                'email' => $email,
+                'password' => $password,
+            ]);
+            exit;
+        }
+
+        // Check for email in database
+        $sql = "SELECT * FROM users WHERE email = :email";
+        $params = ['email' => $email];
+
+        $user = $this->db->query($sql, $params)->fetch();
+
+        if (!$user) {
+            $errors['email'] = 'Incorrect user credentials';
+            loadView('/users/login', ['errors' => $errors]);
+            exit;
+        }
+
+        // Check if password is incorrect
+        if (!password_verify($password, $user->password)) {
+            $errors['password'] = 'Incorrect user credentials';
+            loadView('/users/login', [
+                'errors' => $errors,
+                'email' => $email,
+            ]);
+            exit;
+        }
+
+        // Set user session
+        Session::set('user', [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'city' => $user->city,
+            'state' => $user->state,
+        ]);
 
         redirect('/');
     }
