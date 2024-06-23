@@ -65,9 +65,43 @@ class Session
         }
     }
 
+    /**
+     * Clears all the session
+     *
+     * @return void
+     */
     public static function clearAll(): void
     {
         session_unset();
         session_destroy();
+    }
+
+    /**
+     * Sets a flash message
+     *
+     * @param string $key
+     * @param string $message
+     * @return void
+     */
+    public static function setFlash(string $key, string $message): void
+    {
+        self::set('flash_' . $key, $message);
+    }
+
+    /**
+     * Returns the value of a flash message
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return string|null
+     */
+    public static function getFlash(string $key, mixed $default = null): ?string
+    {
+        if (self::has('flash_' . $key)) {
+            $message = self::get('flash_' . $key, $default);
+            self::clear('flash_' . $key);
+            return $message;
+        }
+        return null;
     }
 }

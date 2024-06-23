@@ -120,7 +120,7 @@ class ListingsController
             $sql = "INSERT INTO listings ({$fields}) VALUES ({$values})";
             $this->db->query($sql, $newListingData);
 
-            $_SESSION['success_message'] = 'Listing Added Successfully';
+            Session::setFlash('success_message', 'Listing Created Successfully');
             redirect('/listings');
         }
     }
@@ -150,7 +150,7 @@ class ListingsController
 
         // Check if user owns the listing
         if (!Authorize::isOwner($listing->user_id)) {
-            $_SESSION['error_message'] = 'You are not authorised to delete this listing';
+            Session::setFlash('error_message', 'You are not authorised to delete this listing');
             redirect('/listings/' . $id);
             return;
         }
@@ -159,7 +159,7 @@ class ListingsController
         $this->db->query($sql, $params);
 
         // Set flash message
-        $_SESSION['success_message'] = 'Listing deleted successfully';
+        Session::setFlash('success_message', 'Listing deleted successfully');
 
         redirect('/listings');
     }
@@ -186,7 +186,7 @@ class ListingsController
 
         // Check if user owns the listing
         if (!Authorize::isOwner($listing->user_id)) {
-            $_SESSION['error_message'] = 'You are not authorised to edit this listing';
+            Session::setFlash('error_message', 'You are not authorised to edit this listing');
             redirect('/listings/' . $id);
             return;
         }
@@ -236,7 +236,7 @@ class ListingsController
             $sql = "UPDATE listings SET {$data} WHERE id = :id";
             $this->db->query($sql, $editedListingData);
 
-            $_SESSION['success_message'] = 'Listing Updated Successfully';
+            Session::setFlash('success_message', 'Listing Updated Successfully');
             redirect("/listings/{$editedListingData['id']}");
         }
     }

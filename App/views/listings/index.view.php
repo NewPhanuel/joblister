@@ -24,7 +24,7 @@
                             </li>
                             <?php if ($listing->tags): ?>
                                 <li class="mb-2">
-                                    <strong>Tags:</strong> <span><?= ucwords($listing->tags) ?></span>
+                                    <strong>Tags:</strong> <span><?= truncate(ucwords($listing->tags), 50) ?></span>
                                 </li>
                             <?php endif; ?>
                         </ul>
