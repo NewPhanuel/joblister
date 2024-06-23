@@ -6,6 +6,7 @@ namespace App\Controllers;
 use Framework\Database;
 use Framework\Validation;
 use Framework\Session;
+use Framework\Authorize;
 
 class ListingsController
 {
@@ -141,8 +142,16 @@ class ListingsController
 
         $listing = $this->db->query($sql, $params)->fetch();
 
+        // Check if listing exists
         if (!$listing) {
             ErrorController::notFound('Listing does not exist');
+            return;
+        }
+
+        // Check if user owns the listing
+        if (!Authorize::isOwner($listing->user_id)) {
+            $_SESSION['error_message'] = 'You are not authorised to delete this listing';
+            redirect('/listings/' . $id);
             return;
         }
 
@@ -169,10 +178,19 @@ class ListingsController
 
         $listing = $this->db->query($sql, $params)->fetch();
 
+        // Check if listing exists
         if (!$listing) {
             ErrorController::notFound('Listing Not Found!');
             return;
         }
+
+        // Check if user owns the listing
+        if (!Authorize::isOwner($listing->user_id)) {
+            $_SESSION['error_message'] = 'You are not authorised to edit this listing';
+            redirect('/listings/' . $id);
+            return;
+        }
+
         loadView('/listings/edit', ['listing' => $listing]);
     }
 
