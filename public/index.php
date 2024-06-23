@@ -9,7 +9,7 @@ use Framework\Session;
 
 Session::start();
 
-// Instantiatig the router
+// Instantiating the router
 $router = new Router();
 
 // Get routes
