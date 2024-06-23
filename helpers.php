@@ -104,7 +104,7 @@ function inspectAndDie(mixed $object): void
  */
 function formatSalary(string $salary): string
 {
-    return '$' . number_format(floatval($salary));
+    return '₦' . number_format(floatval($salary));
 }
 
 /**

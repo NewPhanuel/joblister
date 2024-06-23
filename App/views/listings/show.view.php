@@ -18,7 +18,7 @@ use Framework\Validation;
                 Back To Listings
             </a>
             <?php if (isset(Session::get('user')['id'])): ?>
-                <?php if (Validation::match($listing->user_id, Session::get('user')['id'])): ?>
+                <?php if (Framework\Authorize::isOwner($listing->user_id)): ?>
                     <div class="flex space-x-4 ml-4">
                         <!-- Edit Form -->
                         <a href="/listings/edit/<?= $listing->id ?>"

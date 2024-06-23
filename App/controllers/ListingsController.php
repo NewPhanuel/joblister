@@ -202,9 +202,27 @@ class ListingsController
      */
     public function update(): void
     {
+        // Get fields
         $allowedFields = ['id', 'title', 'description', 'salary', 'tags', 'requirements', 'benefits', 'company', 'address', 'city', 'state', 'phone', 'email'];
         $editedListingData = array_intersect_key($_POST, array_flip($allowedFields));
         $editedListingData = array_map('sanitize', $editedListingData);
+
+        $params = ['id' => $editedListingData['id']];
+        $sql = 'SELECT * FROM listings WHERE id = :id';
+        $listing = $this->db->query($sql, $params)->fetch();
+
+        // Check if listing exists
+        if (!$listing) {
+            ErrorController::notFound('Listing Not Found!');
+            return;
+        }
+
+        // Check if user owns the listing
+        if (!Authorize::isOwner($listing->user_id)) {
+            Session::setFlash('error_message', 'You are not authorised to edit this listing');
+            redirect('/listings/' . $params['id']);
+            return;
+        }
 
         $requiredFields = ['title', 'description', 'salary', 'email', 'city', 'state'];
         $errors = [];
