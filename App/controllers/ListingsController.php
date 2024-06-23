@@ -32,9 +32,8 @@ class ListingsController
      */
     public function index(): void
     {
-        $sql = 'SELECT * FROM listings';
+        $sql = 'SELECT * FROM listings ORDER BY created_at DESC';
         $listings = $this->db->query($sql)->fetchAll();
-        $listings = array_reverse($listings);
         loadView('/listings/index', ['listings' => $listings]);
     }
 

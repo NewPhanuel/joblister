@@ -17,20 +17,22 @@ use Framework\Validation;
                 <i class="fa fa-arrow-alt-circle-left"></i>
                 Back To Listings
             </a>
-            <?php if (Validation::match($listing->user_id, Session::get('user')['id'])): ?>
-                <div class="flex space-x-4 ml-4">
-                    <!-- Edit Form -->
-                    <a href="/listings/edit/<?= $listing->id ?>"
-                        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded">Edit</a>
-                    <!-- End Edit Form -->
-                    <!-- Delete Form -->
-                    <form method="POST">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit"
-                            class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded">Delete</button>
-                    </form>
-                    <!-- End Delete Form -->
-                </div>
+            <?php if (isset(Session::get('user')['id'])): ?>
+                <?php if (Validation::match($listing->user_id, Session::get('user')['id'])): ?>
+                    <div class="flex space-x-4 ml-4">
+                        <!-- Edit Form -->
+                        <a href="/listings/edit/<?= $listing->id ?>"
+                            class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded">Edit</a>
+                        <!-- End Edit Form -->
+                        <!-- Delete Form -->
+                        <form method="POST">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit"
+                                class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded">Delete</button>
+                        </form>
+                        <!-- End Delete Form -->
+                    </div>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
         <div class="p-4">

@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use App\Controllers\ListingsController;
-
 // Get routes
 $router->get('/', 'HomeController@index');
 $router->get('/listings', 'ListingsController@index');
