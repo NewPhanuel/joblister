@@ -2,11 +2,22 @@
     'head',
     'navbar',
     'top-banner'
-) ?>
+);
+
+use Framework\Session;
+
+?>
 <!-- Job Listings -->
 <section>
     <div class="container mx-auto p-4 mt-4">
-        <div class="text-center text-3xl mb-4 font-bold border border-gray-300 p-3">All Jobs</div>
+        <div class="text-center text-3xl mb-4 font-bold border border-gray-300 p-3">
+            <?php if (isset($keywords) || isset($location)): ?>
+                Search result for: <?= $keywords !== '' ? ucwords(sanitize(strip_tags($keywords))) : 'All Jobs' ?>
+                <?= $location !== '' ? 'in ' . ucwords(sanitize(strip_tags($location))) : '' ?>
+            <?php else: ?>
+                All Jobs
+            <?php endif; ?>
+        </div>
         <?php loadPartial('message') ?>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <?php foreach ($listings as $listing): ?>
@@ -20,7 +31,11 @@
                             <?php endif; ?>
                             <li class="mb-2">
                                 <strong>Location:</strong> <?= $listing->city ?>, <?= $listing->state ?>
-                                <!-- <span class="text-xs bg-blue-500 text-white rounded-full px-2 py-1 ml-2">Local</span> -->
+                                <?php if (Session::has('user')): ?>
+                                    <?php if (strcasecmp($listing->state, Session::get('user')['state']) === 0): ?>
+                                        <span class="text-xs bg-blue-500 text-white rounded-full px-2 py-1 ml-2">Local</span>
+                                    <?php endif; ?>
+                                <?php endif; ?>
                             </li>
                             <?php if ($listing->tags): ?>
                                 <li class="mb-2">

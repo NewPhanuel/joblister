@@ -258,4 +258,33 @@ class ListingsController
             redirect("/listings/{$editedListingData['id']}");
         }
     }
+
+    public function search(): void
+    {
+        $keywords = isset($_GET['keywords']) ? trim($_GET['keywords']) : '';
+        $location = isset($_GET['location']) ? trim($_GET['location']) : '';
+
+        if ($keywords === '' && $location === '') {
+            redirect('/');
+        }
+
+        $sql = "SELECT * FROM listings WHERE (title LIKE :keywords 
+            OR description LIKE :keywords 
+            OR tags LIKE :keywords 
+            OR company LIKE :keywords)
+            AND (city LIKE :location
+            OR state LIKE :location)";
+
+        $params = [
+            'keywords' => "%{$keywords}%",
+            'location' => "%{$location}%",
+        ];
+
+        $listings = $this->db->query($sql, $params)->fetchAll();
+        loadView('listings/index', [
+            'listings' => $listings,
+            'keywords' => $keywords,
+            'location' => $location,
+        ]);
+    }
 }

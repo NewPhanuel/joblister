@@ -3,7 +3,8 @@
     'navbar',
     'showcase-search',
     'top-banner'
-) ?>
+);
+use Framework\Session; ?>
 
 <!-- Job Listings -->
 <section>
@@ -20,7 +21,11 @@
                             <li class="mb-2"><strong>Salary:</strong> <?= formatSalary($listing->salary) ?></li>
                             <li class="mb-2">
                                 <strong>Location:</strong> <?= $listing->city ?>, <?= $listing->state ?>
-                                <!-- <span class="text-xs bg-blue-500 text-white rounded-full px-2 py-1 ml-2">Local</span> -->
+                                <?php if (Session::has('user')): ?>
+                                    <?php if (strcasecmp($listing->state, Session::get('user')['state']) === 0): ?>
+                                        <span class="text-xs bg-blue-500 text-white rounded-full px-2 py-1 ml-2">Local</span>
+                                    <?php endif; ?>
+                                <?php endif; ?>
                             </li>
                             <li class="mb-2">
                                 <strong>Tags:</strong> <span><?= truncate(ucwords($listing->tags), 50) ?></span>
